@@ -1,0 +1,355 @@
+
+##############################################################################
+This file was generated using the command script a4.txt. It has been edited 
+to answer the questions. Answers are at the top, and the actual screen 
+capture is at the bottom of the file. This assignment was done in several 
+sessions, and the screen capture from all sessions were appended together
+into this file.
+
+Q0) Find the top 10 users who got retweeted the most from other users.
+    Commands used:
+    grep "type=retweet" downloaded_tweets_extend_nolf2_nobot.tsv > temp0.tsv
+    wc -l temp0.tsv
+    iconv -f utf-8 -t ascii//TRANSLIT temp0.tsv > temp1_a.tsv
+    wc -l temp1_a.tsv
+    cat temp1_a.tsv | tr '[A-Z]' '[a-z]' > temp1_b.txt
+    cat temp1_a.tsv | tr '[A-Z]' '[a-z]' > temp1_b.tsv
+    cat temp1_b.tsv | sed '/^$/d' > temp.tsv
+    wc -l temp.tsv
+    awk -F'\t' '{print $5}' temp.tsv > temp2.tsv
+    awk -F ' ' '{print $2}' temp2.tsv > temp3.txt
+    sed 's/id=//' temp3.txt > temp4.txt
+    sort temp4.txt > retweetID.txt
+    wc -l retweetID.txt 
+    fgrep -f retweetID.txt downloaded_tweets_extend_original_nolf2_nobot.tsv > g1.tsv
+    wc -l g1.tsv
+    cut -f 2 g1.tsv | sort | uniq -c | sort -nr > top_ten_users_retweeted.txt
+
+
+Q1) Represent influence between users as a directional graph of users, 
+    save as a list of lines. 
+    Answer in file a4_1.tsv, uploaded
+    Commands used: 
+    awk -F'\t' '{print $2}' temp.tsv > userID_retweet.txt
+    cut -f 2 g1.tsv > userID_original_tweet.txt
+    paste userID_original_tweet.txt userID_retweet.txt > a4_1.tsv
+    
+
+Q2) Produce clusters (groups of influence) by ranking the users who got replies 
+    by their number of retweets. Keep only the largest clusters by "cutting" at
+    a threshold of 3
+    Answer in file a4_2.tsv, uploaded
+    Commands used:
+    awk '{print $1}' a4_1.tsv | sort | uniq -c | sort -nr | awk '{if($1 >= 3) {print}}' > a4_2_temp.txt
+    awk '{print $2}' a4_2_temp.txt > searchfile.txt
+    fgrep -f searchfile.txt a4_1.tsv > a4_2.tsv
+
+
+Q3) Plot the sizes of clusters as a histogram to show how many clusters of each
+    size resulted.
+    Command used: 
+    awk '{print $1}' a4_2_temp.txt > a4_3.txt
+    Plot in file histogram_3_or_more_retweets.png, uploaded
+    Plot in file histogram_10_or_more_retweets.png, uploaded
+
+
+Q4) Find the 30 most frequent hashtags in these largest clusters of retweets you
+    kept.
+    For this problem, I sorted the retweetID.txt file, found the unique counts, 
+    then kept only the first 30 lines. Then I used these 30 retweet IDs to grep 
+    the original tweet file, and extracted the hashtag column (column 4).
+    Commands used:
+    sort -n retweetID.txt | uniq -c | sort -nr > a4_4a.txt
+    sed '1,30w a4_4b.txt' a4_4a.txt > oo
+    awk -F " " '{print $2}' a4_4b.txt > searchfile_4b.txt
+    fgrep -f searchfile_4b.txt downloaded_tweets_extend_original_nolf2_nobot.tsv > a4_4c.tsv
+    iconv -f utf-8 -t ascii//TRANSLIT a4_4.txt > temp1_a.tsv
+    cat temp1_a.tsv | tr '[A-Z]' '[a-z]' > temp1_b.tsv
+    cat temp1_b.tsv | sed '/^$/d' | sed 's/"//g' > a4_hashtags.txt
+
+    30 most frequent hashtags for cluster of 3 or more replies
+    nursesarenotok
+    neilyoung
+    covidisairborne,maskup
+    misinformation
+    covid19,covidisnotover
+    otd
+    longcovid
+    longcovid
+    westandwithukraine
+    standwithukraine
+    russian,anonymous,ukraine,oprussia,opkremlin,fckputin,standwithukriane
+    ukraine
+    insulin
+    supplychain,logistics,health,healthcare,diabetes
+    stpetersburg,russia,protest
+    slavaukraini,standwithukraine,glorytoukraine
+    ukraine
+    ukraine
+    covid19,ba2
+    ukrainerussiawar
+    longcovid
+    longcovid
+    ukraine,ukrainerussiawar,ukraineunderattack
+    mariupol
+    mariupol,standwithukraine
+    russianrrrrrrettracker
+    confirmkbj
+    longcovid,treatlongcovid
+    longcovid
+    drought
+
+
+Q5) Gephi plots attached 
+    a4_5_1.png (for retweets of userID 2749315621)
+    a4_5_2.png (for replies to userID 21525682)
+
+
+Q6) Describe in a few sentences (2-3 sentences) what the networks 
+    you plotted show.
+    The hashtags were about “ProtectUSASky”, "Ukraine", "WarCrimes", 
+    "BlockPutin" and generally about the war in Ukraine. It looks like
+     this particular user ID and the retweeters were generally concerned
+     about the war in Ukraine and really upset about it.
+
+
+Script a4.txt screen capture follows.
+
+##############################################################################
+
+
+Script started on 2022-10-22 17:41:40-04:00
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ grep "type=retweey[Kt" downloaded_tweets_extend_nolf2_nobot.tsv > temp0.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ ic[K[Kwc -l temp0/tsv[K[K[K[K.tsv
+48954 temp0.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ inc[K[Kconv -f utf-8 -t ascii//TRANSLIT temp0.tsv > temp1_a.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ cat [K[K[K[Kwc -l temp1_a.tsv
+48954 temp1_a.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ cat temp1-a [K[K[K_a.tsv | tr '[A-Z]''[K '[a-z]' > temp1_b.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ cat temp1_a.tsv | tr '[A-Z]' '[a-z]' > temp1_b.txt[K[Ksv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ cat temop[K[Kp1_b.tsv | sed '/^$/d' > temp.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ wc -l temp.tsv
+48954 temp.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ awk -F [K'\t' '{print $5}' temp.tsv > temp2.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ awk -F ' ' '{print $2}' temp2.tsv > temp3.tsv[K[Kxt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ sed 's/id=//' temp3.txt > temp4.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ sort temp4.txt > retweetID.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ wc -l retweetID.txt 
+48954 retweetID.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ fgrep -f retweetID.txt downloaded_tweets_extend_original_nolf2_nobot.tsv > g1.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ cu[K[Kwc -kl[K[Kl g1.tsv
+41080 g1.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ cut - f[K[Kf 2 g1.tsv | sort | uniq -c | sort -nr > top_ten_users_retweeted.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ head top_ten_users.txt
+    375 1891490382
+    299 18831926
+    274 163018653
+    274 1495480590572961792
+    254 1231514832479948802
+    249 1219232377605644289
+    174 42836999
+    159 1229752606714728454
+    158 813314931147816960
+    141 1290232189615894531
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ head top_ten_users_retweeted.txt 
+    375 1891490382
+    299 18831926
+    274 163018653
+    274 1495480590572961792
+    254 1231514832479948802
+    249 1219232377605644289
+    174 42836999
+    159 1229752606714728454
+    158 813314931147816960
+    141 1290232189615894531
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ history > cmds.log
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ exit
+
+Script done on 2022-10-22 17:51:13-04:00
+Script started on 2022-10-22 22:52:32-04:00
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ aawk [K[K[K[Kwk -F'\t' '{print $2}' temp.tsv > userID_retweet.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ cut -f 2 g1.tsv > userID_original_tweet.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ paste userID_original_tweet.txt userID_retweet.txt > a4_1.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ awk '{print $1}' a4_1.tsv | sort | uniq -c | sort -nr | awk '{if($1 >= 3) {print}}' > a 4_2_temp.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ awk '{print $2}' a4_2_temp.txt > searchgi[K[Kfile.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ fgrep -f searchfile.txt ans[K[K4_1.tsv > a4_2.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ head a4_1.tsv
+author	308045021
+457060718	308045021
+140496030	308045021
+202615056	308045021
+202615056	308045021
+288417339	308045021
+80797203	308045021
+1223514530	308045021
+74468291	308045021
+741190491195248642	308045021
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ head a4_2.tsv
+140496030	308045021
+212445456	308045021
+1033994695595065347	308045021
+105327432	308045021
+3866705320	308045021
+14784939	308045021
+11348282	308045021
+14704278	308045021
+62513246	308045021
+151376102	308045021
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ head a4_2.tsv1.tsvfgrep -f searchfile.txt a4_1.tsv > a4_2.tsv[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cawk '{print $2}' a4_2_temp.txt > searchfile.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[4Pfgrep -f searchfile.txt a4_1.tsv > a4_2.tsv[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Chead a4_1.tsv[K2.tsv[Kawk '{print $1}' a4_2_temp.txt > a4_3.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ head a4_3.txt
+1641
+1234
+1140
+994
+850
+650
+375
+354
+302
+299
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ tail a4_3.txt
+3
+3
+3
+3
+3
+3
+3
+3
+3
+3
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ vi userID_original_tweet.txt 
+[?1049h[?1h=[1;22r[23m[24m[0m[H[J[?25l[22;1H"userID_original_tweet.txt" 41080L, 550119C[1;1Hauthor
+457060718
+140496030
+202615056
+202615056
+288417339
+80797203
+1223514530
+74468291
+741190491195248642
+126646669
+2447612839
+794280157238398977
+212445456
+541637104
+1012636248341647360
+2228948601
+73452506
+1074319644482105344
+1033994695595065347
+359909501[22;88H1,1[11CTop[1;1H[34h[?25h[?25l[22;78H:[1;1H[22;1H[K[22;1H:[34h[?25hq[?25l[34h[?25h[?25l[22;1H[K[22;1H[?1l>[34h[?25h[?1049lkananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ vi a4_1.tsv
+[?1049h[?1h=[1;22r[23m[24m[0m[H[J[?25l[22;1H"a4_1.tsv" 48954L, 1227193C[1;1H238230910[7C2800413166
+14784939[8C2800413166
+617854798[7C2800413166
+1668691658      2800413166
+68902976[8C2800413166
+1651522832      2800413166
+2920030904      2800413166
+47475039[8C2800413166
+2722443955      2800413166
+2748061373      2800413166
+299230774[7C2800413166[12;9H2800413166[13;9H2800413166[14;9H2800413166[15;9H2800413166[16;9H2800413166[17;9H2800413166[18;9H2800413166[19;9H2800413166[20;9H2800413166[21;9H2800413166[22;88H41080,1[7C83%[11;1H[34h[?25h[?25l[22;78H:[11;1H[22;1H[K[22;1H:[34h[?25hs[?25l[34h[?25he[?25l[34h[?25ht[?25l[34h[?25h[?25l [34h[?25hn[?25l[34h[?25hu[?25l[34h[?25h[?25l[11;7H[1;1H[33m41070 [0m238230910       2800413166
+[33m41071 [0m14784939        2800413166
+[33m41072 [0m617854798       2800413166
+[33m41073 [0m1668691658      2800413166
+[33m41074 [0m68902976        2800413166
+[33m41075 [0m1651522832      2800413166
+[33m41076 [0m2920030904      2800413166
+[33m41077 [0m47475039        2800413166
+[33m41078 [0m2722443955      2800413166
+[33m41079 [0m2748061373      2800413166
+[33m41080 [0m299230774       2800413166
+[33m41081 [0m        2800413166
+[33m41082 [0m        2800413166
+[33m41083 [0m        2800413166
+[33m41084 [0m        2800413166
+[33m41085 [0m        2800413166
+[33m41086 [0m        2800413166
+[33m41087 [0m        2800413166
+[33m41088 [0m        2800413166
+[33m41089 [0m        2800413166
+[33m41090 [0m        2800413166[22;88H41080,1[7C83%[11;7H[34h[?25h[?25l[22;78H~@k[11;7H[22;78H   [12;14H[22;92H1,1-8[12;14H[34h[?25h[?25l[22;78Hd[12;14H[34h[?25h[?25l[22;79HG[12;14H[22;1H7874 fewer lines[22;78H[K[11;7H
+[1m[34m~                                                                                                        [13;1H~                                                                                                        [14;1H~                                                                                                        [15;1H~                                                                                                        [16;1H~                                                                                                        [17;1H~                                                                                                        [18;1H~                                                                                                        [19;1H~                                                                                                        [20;1H~                                                                                                        [21;1H~                                                                                                        [0m[22;88H41080,1[7CBot[22;88H[K[22;88H41080,1[7CBot[11;7H[34h[?25h[?25l[22;78H:[11;7H[22;1H[K[22;1H:[34h[?25hw[?25l[34h[?25hq[?25l[34h[?25h[?25l"a4_1.tsv" 41080L, 1107974C written
+[?1l>[34h[?25h[?1049lkananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ awk '{print $1}' a4_1.tsv | sort | uniq -c | sot[Krt -nr | awk '{if($1 >= 3){print}}' > a4 _2_temp.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ awk '{pti[K[Krint $2}' a4_2_temp.txt > searchfile.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ fgrep -f searchgi[K[Kfile.txt ans_1.tsv > a4_2.tsv
+grep: ans_1.tsv: No such file or directory
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ fgrep -f searchfile.txt ans_1.tsv > a4_2.tsv[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cawk '{print $2}' a4_2_temp.txt > searchfile.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C1}' a4_1.tsv | sort | uniq -c | sort -nr | awk '{if($1 >= 3){print}}' > a4__2_temp.txtM[C[C[C[C[C[C[Cvi a4_1.tsv[K
+[KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[CuserID_original_tweet.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[16Ptail a4_3.txthead[C[C[C[C[C[C[C[C[C[28@awk '{print $1}' a4_2_temp.txt >[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Chead a4_2.tsv[K1.tsvfgrep -f searchfile.txt a4_1.tsv > a4_2.tsv[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Chead a4_1.tsv[K2.tsvawk '{print $1}' a4_2_temp.txt > a4_3.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Chead a4_3.txt[Ktail[C[C[C[C[C[C[C[C[Cvi userID_original_tweet.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ca4_1.tsv[Kawk '{print $1}' a4_1.tsv | sort | uniq -c | sort -nr | awk '{if($1 >= 3){print}}' > a4__2_temp.txtM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[40P2}' a4_2_temp.txt > searchfile.txt
+[KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[3Pfgrep -f searchfile.txt ans_1.tsv > a4_2.tsv[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kfgrep -f searchfile.txt ans_1.tsv > a4_2.tsv[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kfg[K[Kfgrep -f searchfile.txt ans_1.tsv > a4_2.tsv[C[1P[1P[1@4
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ fgrep [K[K[K[K[K[Khead a4_2.tsv
+140496030	308045021
+212445456	308045021
+1033994695595065347	308045021
+105327432	308045021
+3866705320	308045021
+14784939	308045021
+11348282	308045021
+14704278	308045021
+62513246	308045021
+151376102	308045021
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ awk '{print $1}' a4_2_temp.txt > a4_3.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$  sort -n retweetID.txt | uniq -c | sort -nr > a4_4a.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ sed '1,30w a4_4b.txt' a4_4a.txt > oo
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ awk -F " " '{print $2}' a4_4b.txt > searchfile_4b.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ fgrep -f searchfile_4b.txt downloaded_tweets_extend_original_nolf2_nobot.tsv > a4_4c.tsvv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ iconv -f utf-8 -t ascii//TRANSLIT a4_4.txt > temp1_a.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ cat temp1_a.tsv | tr[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kcat temp1_a.tsv | tr '[A-Z]' '[a-z]' > temp1_b.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ cat temp1_b.tsv | sed '/^$/d' | sed 's/"//g' > a4_hashtags.txt
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ head a4_hashtags.txt
+nursesarenotok
+neilyoung
+covidisairborne,maskup
+misinformation
+covid19,covidisnotover
+otd
+longcovid
+longcovid
+westandwithukraine
+standwithukraine
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ history > cmds.log
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ exit
+
+Script done on 2022-10-23 01:11:48-04:00
+Script started on 2022-10-23 02:01:13-04:00
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ cp home[K[K[K[K~/A3/temp/a3_2_temp.txt .
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ head A[Ka3_2_temp.txt
+     45 3453306553
+     27 29447428
+     14 1238370241169616897
+     13 1108565574
+     12 19739126
+     11 21525682
+     10 95091601
+     10 48624704
+     10 1462548977367359490
+      9 26217297
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ grep  21525682 a3[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kcp ~/A3/a3_2_tsv[K[K[K[K.tsv ./a3_2_grapg[Kh.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ grep  21525682 a3_2_graph.tsvv[K > a4_5_2.tsv
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ more a4_5_2.tsv
+21525682	997519418492993537
+21525682	997519418492993537
+21525682	20821069
+21525682	997519418492993537
+21525682	494701047
+21525682	253641379
+21525682	997519418492993537
+21525682	1443349716943572995
+21525682	1493774877198749699
+21525682	40931023
+21525682	1265835600923357185
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ history > cmds_4.log
+kananya@sjsu:/mnt/scratch/ananya/A4\[ananya@sjsu A4]$ exit
+
+Script done on 2022-10-23 02:04:13-04:00
+Script started on 2022-10-24 00:29:35-04:00
+]0;ananya@sjsu:/mnt/scratch/ananya/A4[ananya@sjsu A4]$ tmux attach -t homw[Kework
+[?1049h[22;0;0t[?1h=[H[2J[?12l[?25h[?1000l[?1002l[?1006l[?1005l[c(B[m[?12;25h[?12l[?25h[?1003l[?1006l[?2004l[1;1H[1;24r]112[1;20H[?25l[H[ananya@sjsu A4]$ [K
+-bash: $'\302\202grep': command not found                                      [K
+[ananya@sjsu A4]$ grep -P 2749315621 downloaded_tweets_extend_original_nolf2_nobot.tsv > a4_5_b.tsv[K
+[ananya@sjsu A4]$ cut -f 4 a4_5_b.tsv > a4_5_b.txt                             [K
+[ananya@sjsu A4]$ sort a4_5_b.txt | uniq -c | sort -r > oo                     [K
+[ananya@sjsu A4]$ vi oo[K
+[30m[42m[homework]0:bashA4*                      "sjsu.pub.pic2.ibm.com" 00:33 24-Oct-22(B[m[9;1H[?12l[?25h[ananya@sjsu A4]$ [?25l[20;1H[30m[42m[homework]0:bashA4*                      "sjsu.pub.pic2.ibm.com" 00:34 24-Oct-22(B[m[9;19H[?12l[?25h[?25l[20;1H[30m[42m[homework]0:bashA4*                      "sjsu.pub.pic2.ibm.com" 00:35 24-Oct-22(B[m[9;19H[?12l[?25h[?25l[20;1H[30m[42m[homework]0:bashA4*                      "sjsu.pub.pic2.ibm.com" 00:36 24-Oct-22(B[m[9;19H[?12l[?25h[?25l[20;1H[30m[42m[homework]0:bashA4*                      "sjsu.pub.pic2.ibm.com" 00:37 24-Oct-22(B[m[9;19H[?12l[?25h[?25l[20;1H[30m[42m[homework]0:bashA4*                      "sjsu.pub.pic2.ibm.com" 00:38 24-Oct-22(B[m[9;19H[?12l[?25h[?25l[20;1H[30m[42m[homework]0:bashA4*                      "sjsu.pub.pic2.ibm.com" 00:39 24-Oct-22(B[m[9;19H[?12l[?25h[?25l[20;1H[30m[42m[homework]0:bashA4*                      "sjsu.pub.pic2.ibm.com" 00:40 24-Oct-22(B[m[9;19H[?12l[?25h[?25l[20;1H[30m[42m[homework]0:bashA4*                      "sjsu.pub.pic2.ibm.com" 00:41 24-Oct-22(B[m[9;19H[?12l[?25h[?25l[20;1H[30m[42m[homework]0:bashA4*                      "sjsu.pub.pic2.ibm.com" 00:42 24-Oct-22(B[m[9;19H[?12l[?25h[?25l[20;1H[30m[42m[homework]0:bashA4*                      "sjsu.pub.pic2.ibm.com" 00:43 24-Oct-22(B[m[9;19H[?12l[?25h[?25l[20;1H[30m[42m[homework]0:bashA4*                      "sjsu.pub.pic2.ibm.com" 00:44 24-Oct-22(B[m[9;19H[?12l[?25h[?25l[20;1H[30m[42m[homework]0:bashA4*                      "sjsu.pub.pic2.ibm.com" 00:45 24-Oct-22(B[m[9;19H[?12l[?
